@@ -1,0 +1,81 @@
+image: gitlab/dind
+
+variables:
+  KUBECTL: v1.17.0
+  KIND: v0.7.0
+
+services:
+  - docker:18.09.7-dind
+
+stages:
+  - build
+
+build worker:
+  stage: build
+  tags:
+    - docker
+  image:
+    name: gitlab/dind
+  script:
+    - docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+    - docker build -t ${DOCKER_TEAM}/owl-worker ./worker
+    - docker push ${DOCKER_TEAM}/owl-worker
+  only:
+    changes:
+      - worker*
+
+build collector:
+  stage: build
+  tags:
+    - docker
+  image:
+    name: gitlab/dind
+  script:
+    - docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+    - docker build -t ${DOCKER_TEAM}/owl-collector ./collector
+    - docker push ${DOCKER_TEAM}/owl-collector
+  only:
+    changes:
+      - collector*
+
+build restapi:
+  stage: build
+  tags:
+    - docker
+  image:
+    name: gitlab/dind
+  script:
+    - docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+    - docker build -t ${DOCKER_TEAM}/owl-restapi ./restapi
+    - docker push ${DOCKER_TEAM}/owl-restapi
+  only:
+    changes:
+      - restapi*
+
+build analyzer:
+  stage: build
+  tags:
+    - docker
+  image:
+    name: gitlab/dind
+  script:
+    - docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+    - docker build -t ${DOCKER_TEAM}/owl-analyzer ./metric-analyze
+    - docker push ${DOCKER_TEAM}/owl-analyzer
+  only:
+    changes:
+      - metric-analyze*
+
+build front:
+  stage: build
+  tags:
+    - docker
+  image:
+    name: gitlab/dind
+  script:
+    - docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+    - docker build -t ${DOCKER_TEAM}/owl-front ./graph
+    - docker push ${DOCKER_TEAM}/owl-front
+  only:
+    changes:
+      - graph*
