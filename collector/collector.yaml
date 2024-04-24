@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-configmap
+  namespace: owl
+data:
+  OPCSERVER: opc.tcp://opc-svc:8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collector
+  namespace: owl
+  labels:
+    app: collector
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: collector
+  template:
+    metadata:
+      labels:
+        app: collector
+    spec:
+      containers:
+      - name: collector
+        image: inviewteam/owl-collector 
+        ports:
+        - containerPort: 8888
+        envFrom:
+        - configMapRef:
+            name: env-configmap
