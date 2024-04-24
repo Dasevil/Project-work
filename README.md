@@ -1,6 +1,5 @@
 # Owl
 
-![alt text](https://raw.githubusercontent.com/InviewComp/Owl/master/logo_owl.jpg)
 
 OPC-UA metric collector and anomaly detector for Kubernetes
 
