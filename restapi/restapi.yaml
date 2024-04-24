@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: restapi
+  namespace: owl
+  labels:
+    app: restapi
+spec:
+  containers:
+  - name: restapi
+    image: inviewteam/owl-restapi  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: restapi-svc
+  namespace: owl
+spec:
+  type: NodePort
+  selector:
+    app: restapi
+  ports:
+    - protocol: TCP
+      port: 1337
+      targetPort: 1337
+      nodePort: 31338
